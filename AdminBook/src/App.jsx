@@ -1,12 +1,16 @@
 import React from 'react'
-import AddBook from './Components/AddBook'
-import BookList from './Components/BookList'
+import AddBook from './Pages/AddBook'
+import BookList from './Pages/BookList'
+import { Outlet } from 'react-router-dom'
+import SideBarMenu from './Components/SideBarMenu'
 
 function App() {
   return (
     <>
-      {/* <AddBook /> */}
-      <BookList></BookList>
+      <SideBarMenu>
+        <Outlet></Outlet>
+      </SideBarMenu>
+      
     </>
   )
 }

@@ -4,12 +4,14 @@ const app=express();
 const cors=require('cors')
 const connectDB=require('./connection');
 const book=require('./routes/book');
+const mobile=require('./routes/mobile');
 const { connectCloudinary } = require('./Config/cloudanry');
 connectDB();
-connectCloudinary()
+connectCloudinary();
 const port=process.env.PORT;
 app.use(cors());
 app.use("/book",book);
+app.use("/mobile",mobile);
 
 
 app.listen(port,()=>{

@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import axios from 'axios'
-import PopUp from "./PopUp";
+import PopUp from "../Components/PopUp";
+import { useNavigate } from "react-router-dom";
 
 export default function BookForm() {
   const [isSuccess, setIsSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  let navigate = useNavigate([])
+  const apiURL=import.meta.env.VITE_API_URL
 
   const [formData, setFormData] = useState({
     booktitle: "",
@@ -51,6 +54,10 @@ export default function BookForm() {
   }));
 };
 
+ function onClose() {
+    navigate("/bookList");
+  }
+
   function doAddBook() {
     setIsLoading(true); // start loading
     let data = new FormData();
@@ -59,7 +66,7 @@ export default function BookForm() {
     });
 
     axios({
-      url: 'http://localhost:3000/book/addBook',
+      url: `${apiURL}/book/addBook`,
       method: 'post',
       data: data,
       headers: { 'content-type': 'multipart/form-data' }
@@ -432,7 +439,8 @@ export default function BookForm() {
         <PopUp
           status={isSuccess}
           mgs={isSuccess ? "Book added successfully 🎉" : "Something went wrong 😢"}
-          onClose={() => setIsSuccess(null)} // close karega
+           // close karega
+          onClose={() => onClose()}
         />
       )}
 
