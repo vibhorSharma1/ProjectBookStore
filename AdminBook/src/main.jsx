@@ -9,6 +9,10 @@ import {RouterProvider,Route, createBrowserRouter, createRoutesFromElements} fro
 import AddMobile from './Pages/AddMobile.jsx'
 import MobileList from './Pages/MobileList'
 import EditMobilePage from './Pages/EditMobilePage'
+import CouponsList from './Components/coupons/CouponsList.jsx'
+import AddCoupons from './Components/coupons/AddCoupons.jsx'
+import DiscountList from './Components/discount/DiscountList.jsx'
+import AddDiscount from './Components/discount/AddDiscount.jsx'
 
 const router=createBrowserRouter(
   createRoutesFromElements(
@@ -19,6 +23,10 @@ const router=createBrowserRouter(
       <Route path='/mobileList' element={<MobileList/>}/>
       <Route path='/editBook/:id' element={<EditBookPage/>} />
       <Route path='/editMobile/:id' element={<EditMobilePage/>} />
+      <Route path='/coupons' element={<CouponsList/>}></Route>
+      <Route path='/addCoupon' element={<AddCoupons/>}></Route>
+      <Route path='/discounts' element={<DiscountList/>}></Route>
+      <Route path='/addDiscount' element={<AddDiscount/>}></Route>
     </Route>
   )
 )

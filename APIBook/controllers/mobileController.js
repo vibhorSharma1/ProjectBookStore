@@ -1,6 +1,7 @@
 const { uploadImage } = require('../Config/cloudanry');
 const Mobile = require('../models/Mobile');
 
+
 async function getALlMobiles(req, res) {
     try {
         let mobiles = await Mobile.find({});

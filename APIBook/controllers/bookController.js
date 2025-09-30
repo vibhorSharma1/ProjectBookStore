@@ -1,6 +1,5 @@
 const { uploadImage } = require('../Config/cloudanry');
 const Book = require('../models/Book');
-const { options } = require('../routes/mobile');
 
 async function addBook(req, res) {
     try {
@@ -97,6 +96,15 @@ async function searchBook(req, res) {
         res.status(400).send({ success: false, message: "something went wrong" })
     }
 }
+async function getBookNames(req,res){
+    try{
+        let books=await Book.find({},{booktitle:1});
+    res.status(200).send({success:true,data:books})
+    }catch(err){
+        console.log(err)
+        res.status(404).send({success:false,message:err})
+    }
+}
 
 module.exports = {
 
@@ -105,5 +113,6 @@ module.exports = {
     deleteBook,
     getBookById,
     editBook,
-    searchBook
+    searchBook,
+    getBookNames
 }

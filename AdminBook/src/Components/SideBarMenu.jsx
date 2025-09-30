@@ -1,3 +1,11 @@
+import {
+  BookOpenIcon,
+  DevicePhoneMobileIcon,
+  GiftIcon,
+  TagIcon,
+  Squares2X2Icon,
+} from "@heroicons/react/24/outline";
+
 function SideBarMenu({ children }) {
   return (
     <div className="flex min-h-screen">
@@ -5,8 +13,8 @@ function SideBarMenu({ children }) {
       <div className="w-64 bg-gradient-to-b from-purple-900 via-purple-800 to-purple-950 text-white flex flex-col">
         {/* Logo / Title */}
         <div className="p-6 flex items-center space-x-2">
-          <i className="bi bi-speedometer text-2xl"></i>
-          <span className="text-2xl font-bold">Book and Mobile Store</span>
+          <Squares2X2Icon className="h-7 w-7 text-purple-300" />
+          <span className="text-xl font-bold">Book & Mobile Store</span>
         </div>
         <hr className="border-purple-700 mx-4" />
 
@@ -18,17 +26,19 @@ function SideBarMenu({ children }) {
               href="/bookList"
               className="flex items-center px-3 py-2 rounded-lg hover:bg-purple-700 transition"
             >
-              <i className="bi bi-book text-lg"></i>
+              <BookOpenIcon className="h-6 w-6 text-purple-300" />
               <span className="ml-3">Manage Book</span>
             </a>
           </li>
+
+          {/* Manage Mobile */}
           <li>
             <a
               href="/mobileList"
               className="flex items-center px-3 py-2 rounded-lg hover:bg-purple-700 transition"
             >
-              <i className="bi bi-book text-lg"></i>
-              <span className="ml-3">Manage Mobile </span>
+              <DevicePhoneMobileIcon className="h-6 w-6 text-purple-300" />
+              <span className="ml-3">Manage Mobile</span>
             </a>
           </li>
 
@@ -38,8 +48,19 @@ function SideBarMenu({ children }) {
               href="/coupons"
               className="flex items-center px-3 py-2 rounded-lg hover:bg-purple-700 transition"
             >
-              <i className="bi bi-gift text-lg"></i>
+              <GiftIcon className="h-6 w-6 text-purple-300" />
               <span className="ml-3">Coupons</span>
+            </a>
+          </li>
+
+          {/* Discounts */}
+          <li>
+            <a
+              href="/discounts"
+              className="flex items-center px-3 py-2 rounded-lg hover:bg-purple-700 transition"
+            >
+              <TagIcon className="h-6 w-6 text-purple-300" />
+              <span className="ml-3">Discount</span>
             </a>
           </li>
 
@@ -49,7 +70,7 @@ function SideBarMenu({ children }) {
               href="/dashboard"
               className="flex items-center px-3 py-2 rounded-lg hover:bg-purple-700 transition"
             >
-              <i className="bi bi-table text-lg"></i>
+              <Squares2X2Icon className="h-6 w-6 text-purple-300" />
               <span className="ml-3">Dashboard</span>
             </a>
           </li>

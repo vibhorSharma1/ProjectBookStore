@@ -36,4 +36,8 @@ router.post("/editBook/:id",uploader.single("imageUrl"),(req,res)=>{
     
     bookController.editBook(req,res);
 })
+router.get('/getBookNames',(req,res)=>{
+    console.log("hello")
+    bookController.getBookNames(req,res);
+})
 module.exports=router;
