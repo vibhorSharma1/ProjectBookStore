@@ -27,9 +27,21 @@ async function addBook(req, res) {
 
 async function getALlBooks(req, res) {
     try {
-        let books = await Book.find({});
-        //  console.log(books)
-        res.status(200).send({ success: true, data: books })
+    
+        let {page,limit}=req.query;
+        page=parseInt(page) || 1;
+        limit=parseInt(limit) || 5;
+        let skip=(page-1)*limit;
+        let books = await Book.find({}).limit(limit).skip(skip);
+        let totalLimit=await Book.find({}).countDocuments({});
+        // console.log(books)
+        res.json({
+            books,
+            currentPage:page,
+            totalPages:Math.ceil(totalLimit/limit),
+            totalLimit,
+            success: true
+        })
     } catch (error) {
         res.status(400).send({ success: false, message: "something went wrong" })
     }

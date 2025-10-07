@@ -1,8 +1,10 @@
 import axios from 'axios'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Pagination } from 'react'
 import { useNavigate } from 'react-router-dom'
 import PopUp from '../Components/PopUp'
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid'
+import { FaArrowCircleRight } from "react-icons/fa";
+import { FaArrowCircleLeft } from "react-icons/fa";
 
 function BookList() {
     const [Books, setBooks] = useState([])
@@ -10,6 +12,10 @@ function BookList() {
     let navigate = useNavigate([])
     const apiURL = import.meta.env.VITE_API_URL
     let [searchName, setSearchName] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const limit = 5; // Books per page
+
 
     function handleDelete(id) {
         console.log("Deleting book:", id)
@@ -43,34 +49,33 @@ function BookList() {
         setIsSuccess(null);
     }
     function searchBook(term) {
-        
         axios({
             url: `${apiURL}/book/searchBook/${term}`,
-            method: 'get'
+            method: "get"
         }).then((result) => {
             if (result.data.success) {
-                setBooks(result.data.data)
-                console.log(result.data.data)
+                setBooks(result.data.data);
+                setTotalPages(1); // Search results single page
+                setCurrentPage(1);
             }
-        }).catch((err) => {
-            console.error(err)
-        })
+        }).catch((err) => console.error(err));
     }
+
 
 
     useEffect(() => {
         axios({
-            url: `${apiURL}/book/books`,
-            method: 'get'
+            url: `${apiURL}/book/books?page=${currentPage}&limit=${limit}`,
+            method: "get"
         }).then((result) => {
             if (result.data.success) {
-                setBooks(result.data.data)
-                console.log(result.data.data)
+                setBooks(result.data.books);
+                setTotalPages(result.data.totalPages);
             }
-        }).catch((err) => {
-            console.error(err)
-        })
-    }, [])
+            console.log(result.data)
+        }).catch((err) => console.error(err));
+    }, [currentPage]);
+
 
     return (
         <>
@@ -130,7 +135,7 @@ function BookList() {
 
                                         <td className="p-4 text-purple-700">{item.publisher}</td>
                                         <td className="p-4 font-bold text-green-600">₹{item.originalPrice}</td>
-                                        <td className="p-4 text-center">
+                                        <td className="p-4 text-center flex">
                                             <button
                                                 onClick={() => handleDelete(item._id)}
                                                 className="px-4 py-2 rounded-xl bg-gradient-to-r from-red-500 to-red-700 text-white font-medium shadow-md hover:scale-105 transform transition"
@@ -156,6 +161,27 @@ function BookList() {
                             }
                         </tbody>
                     </table>
+                    <div className="flex justify-center items-center gap-4 mt-6">
+                <button
+                    className="px-4 py-2 bg-gradient-to-r from-purple-400 to-purple-600 text-white rounded hover:scale-105 transition"
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                >
+                    <FaArrowCircleLeft />
+                </button>
+
+                <span className="px-4 py-2 text-white bg-gradient-to-r from-blue-300 via-pink-400 to-purple-500 rounded shadow">
+                    Page {currentPage} of {totalPages}
+                </span>
+
+                <button
+                    className="px-4 py-2 bg-gradient-to-r from-purple-400 to-purple-600 text-white rounded hover:scale-105 transition"
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                >
+                    <FaArrowCircleRight />
+                </button>
+            </div>
                 </div>
             </div>
             {isSuccess !== null && (
@@ -165,6 +191,8 @@ function BookList() {
                     onClose={() => onClose()} // state reset karega popup close ke liye
                 />
             )}
+            
+
         </>
     )
 }

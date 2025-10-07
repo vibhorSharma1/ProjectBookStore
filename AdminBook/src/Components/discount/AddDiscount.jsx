@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import PopUp from "../PopUp";
 
 function AddDiscount() {
   let [options, setOptions] = useState([]);
@@ -13,26 +15,24 @@ function AddDiscount() {
     validTo: "",
     status: "Active",
   });
+  const [popup, setPopup] = useState({ show: false, status: null, msg: "" });
 
+  const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
 
-  // First load → fetch all book names
   useEffect(() => {
     axios
       .get(`${apiUrl}/book/getBookNames`)
       .then((result) => {
         const formatted = result.data.data.map((book) => ({
-          value: book._id, // unique id
-          label: book.booktitle, // jo text dikhana hai
+          value: book._id,
+          label: book.booktitle,
         }));
         setOptions(formatted);
       })
-      .catch((err) => {
-        console.log("Error aa gya re", err);
-      });
+      .catch((err) => console.log(err));
   }, []);
 
-  // Search input ke sath API call
   function handleInputChange(input) {
     if (input.length > 0) {
       axios
@@ -44,37 +44,47 @@ function AddDiscount() {
           }));
           setOptions(formatted);
         })
-        .catch((err) => {
-          console.log("Error aa gya re", err);
-        });
+        .catch((err) => console.log(err));
     }
   }
 
   function handleChange(selected) {
     setSelectedOption(selected);
-    console.log("Selected book:", selected?.value);
   }
 
-  // Form input handle
   const handleFormChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedOption) {
       alert("Please select a book first!");
       return;
     }
+
     const payload = { book: selectedOption.value, ...formData };
-    console.log("Payload:", payload);
+
     try {
-      await axios.post(`${apiUrl}/discount/getDiscount`, payload);
-      alert("✅ Discount Added Successfully!");
+      await axios.post(`${apiUrl}/discount/addDiscount`, payload);
+      setPopup({
+        show: true,
+        status: true,
+        msg: "Discount Added Successfully! 🎉",
+      });
     } catch (err) {
-      console.log("Error submitting:", err);
+      console.log(err);
+      setPopup({
+        show: true,
+        status: false,
+        msg: "Failed to Add Discount 😢",
+      });
     }
+  };
+
+  const closePopup = () => {
+    setPopup({ show: false, status: null, msg: "" });
+    if (popup.status) navigate("/discounts"); // redirect on success
   };
 
   return (
@@ -84,7 +94,6 @@ function AddDiscount() {
           🎯 Add Discount
         </h1>
 
-        {/* Book Select */}
         <Select
           options={options}
           value={selectedOption}
@@ -95,10 +104,8 @@ function AddDiscount() {
           className="text-purple-900 mb-6"
         />
 
-        {/* Discount Form → Only if book is selected */}
         {selectedOption && (
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Discount Name */}
             <div>
               <label className="block text-purple-800 font-semibold mb-1">
                 Discount Name
@@ -114,7 +121,6 @@ function AddDiscount() {
               />
             </div>
 
-            {/* Discount Type */}
             <div>
               <label className="block text-purple-800 font-semibold mb-1">
                 Discount Type
@@ -130,7 +136,6 @@ function AddDiscount() {
               </select>
             </div>
 
-            {/* Discount Value */}
             <div>
               <label className="block text-purple-800 font-semibold mb-1">
                 Discount Value
@@ -146,7 +151,6 @@ function AddDiscount() {
               />
             </div>
 
-            {/* Valid From / To */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-purple-800 font-semibold mb-1">
@@ -174,7 +178,6 @@ function AddDiscount() {
               </div>
             </div>
 
-            {/* Status */}
             <div>
               <label className="block text-purple-800 font-semibold mb-1">
                 Status
@@ -190,7 +193,6 @@ function AddDiscount() {
               </select>
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
               className="w-full bg-purple-600 text-white font-semibold py-2 rounded-xl hover:bg-purple-700 transition"
@@ -198,6 +200,10 @@ function AddDiscount() {
               Add Discount
             </button>
           </form>
+        )}
+
+        {popup.show && (
+          <PopUp status={popup.status} msg={popup.msg} onClose={closePopup} />
         )}
       </div>
     </div>

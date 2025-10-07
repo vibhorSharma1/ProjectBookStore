@@ -7,8 +7,11 @@ router.use(bodyparse.urlencoded({
     extended:false
 }))
 
-router.post('/getDiscount',(req,res)=>{
+router.post('/addDiscount',(req,res)=>{
     discountController.getDiscount(req,res);
+})
+router.get('/getAllDiscounts',(req,res)=>{
+    discountController.getAllDiscount(req,res);
 })
 
 module.exports=router;
